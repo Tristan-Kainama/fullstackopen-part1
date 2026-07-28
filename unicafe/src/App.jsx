@@ -1,9 +1,38 @@
 import { useState } from 'react'
 
-const Statistics = (props) => {
+const Button = (props) => {
+  return (
+    <>
+      <button onClick={props.function}>{props.name}</button>
+    </>
+  )
+}
+
+const Statistic = (props) => {
   return (
     <>
       <p>{props.name} {props.statistic}</p>
+    </>
+  )
+}
+
+const Statistics = (props) => {
+  if (props.all == 0) {
+    return (
+      <>
+        <p>No feedback given</p>
+      </>
+    )
+  }
+
+  return (
+    <>
+      <Statistic name="good" statistic={props.good}/>
+      <Statistic name="neutral" statistic={props.neutral}/>
+      <Statistic name="bad" statistic={props.bad}/>
+      <Statistic name="all" statistic={props.all}/>
+      <Statistic name="average" statistic={props.average}/>
+      <Statistic name="positive" statistic={props.positive} />
     </>
   )
 }
@@ -26,11 +55,10 @@ const App = () => {
   }
 
   const countPositive = (newGood, newAll) => {
-    const newPositive = newGood / newAll;
+    const newPositive = (newGood / newAll) * 100;
     const positiveString = newPositive + " %";
 
     setPositive(positiveString);
-    console.log(positive);
   }
 
   const handleGoodButton = () => {
@@ -65,17 +93,12 @@ const App = () => {
   return (
     <div>
       <h1>give feedback</h1>
-      <button onClick={handleGoodButton}>good</button>
-      <button onClick={handleNeutralButton}>neutral</button>
-      <button onClick={handleBadButton}>bad</button>
+      <Button name="good" function={handleGoodButton}/>
+      <Button name="neutral" function={handleNeutralButton}/>
+      <Button name="bad" function={handleBadButton}/>
 
       <h1>statistics</h1>
-      <Statistics name="good" statistic={good}/>
-      <Statistics name="neutral" statistic={neutral}/>
-      <Statistics name="bad" statistic={bad}/>
-      <Statistics name="all" statistic={all}/>
-      <Statistics name="average" statistic={average}/>
-      <Statistics name="positive" statistic={positive} />
+      <Statistics good={good} neutral={neutral} bad={bad} all={all} average={average} positive={positive}/>
     </div>
   )
 }
