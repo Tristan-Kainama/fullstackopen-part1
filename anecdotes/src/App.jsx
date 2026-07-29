@@ -1,5 +1,22 @@
 import { useState } from 'react'
 
+const Most = (props) => {
+  const total = props.votes.reduce((accumulator, currentValue) => accumulator + currentValue, 0)
+  if (total == 0) {
+    return (
+      <>
+        <p>There has been no votes done.</p>
+      </>
+    )
+  }
+
+  return (
+    <>
+      <p>{props.most}</p>
+    </>
+  )
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -14,24 +31,35 @@ const App = () => {
 
   const [selected, setSelected] = useState(0)
   const [votes, setVotes] = useState(Array(anecdotes.length).fill(0))
+  const [most, setMost] = useState("")
+
+  const updateMost = (votes) => {
+    const maxIdx = votes.indexOf(Math.max(...votes));
+    setMost(anecdotes[maxIdx])
+  }
 
   const handleNextAnecdote = () => {
     const randomNumber = Math.floor(Math.random() * (anecdotes.length));
     setSelected(randomNumber)
-    console.log(randomNumber)
+    updateMost(votes)
   }
 
   const handleVoteButton = () => {
     const newVotes = [...votes]
     newVotes[selected] += 1
     setVotes(newVotes)
+    updateMost(newVotes)
   }
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <p>{anecdotes[selected]}</p>
       <button onClick={handleVoteButton}>vote</button>
       <button onClick={handleNextAnecdote}>next anecdote</button>
+
+      <h1>Anecdote with most votes</h1>
+      <Most votes={votes} most={most}/>
     </div>
   )
 }
